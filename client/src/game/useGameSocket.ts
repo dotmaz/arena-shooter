@@ -6,10 +6,12 @@ import { ServerMsg, ClientMsg } from '../../../shared/game';
 
 export type MsgHandler = (msg: ServerMsg) => void;
 
-export function useGameSocket(onMessage: MsgHandler) {
+export function useGameSocket(onMessage: MsgHandler, onOpen?: () => void) {
   const wsRef = useRef<WebSocket | null>(null);
   const onMessageRef = useRef(onMessage);
   onMessageRef.current = onMessage;
+  const onOpenRef = useRef(onOpen);
+  onOpenRef.current = onOpen;
 
   const connect = useCallback(() => {
     const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -17,7 +19,10 @@ export function useGameSocket(onMessage: MsgHandler) {
     const ws = new WebSocket(url);
     wsRef.current = ws;
 
-    ws.onopen = () => console.log('[WS] Connected');
+    ws.onopen = () => {
+      console.log('[WS] Connected');
+      onOpenRef.current?.();
+    };
     ws.onclose = () => console.log('[WS] Disconnected');
     ws.onerror = (e) => console.error('[WS] Error', e);
     ws.onmessage = (ev) => {

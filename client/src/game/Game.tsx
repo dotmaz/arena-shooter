@@ -79,9 +79,16 @@ export default function Game({ playerName, onGameEnd, onLeave }: Props) {
         break;
       }
     }
-  }, [myId, onGameEnd]);
+  }, [onGameEnd]);
 
-  const { send } = useGameSocket(handleMessage);
+  const playerNameRef = useRef(playerName);
+  playerNameRef.current = playerName;
+
+  const handleOpen = useCallback(() => {
+    sendRef.current?.({ type: 'join_queue', payload: { name: playerNameRef.current } });
+  }, []);
+
+  const { send } = useGameSocket(handleMessage, handleOpen);
   sendRef.current = send as unknown as typeof sendRef.current;
 
   // Initialize renderer and game loop
@@ -114,23 +121,17 @@ export default function Game({ playerName, onGameEnd, onLeave }: Props) {
     }
   }, [uiPhase, myId]);
 
-  // Join queue on mount
+  // Ping interval
   useEffect(() => {
-    const timer = setTimeout(() => {
-      send({ type: 'join_queue', payload: { name: playerName } });
-    }, 500);
-
-    // Ping interval
     const pingInterval = setInterval(() => {
       pingTs.current = Date.now();
       send({ type: 'ping' });
     }, 3000);
 
     return () => {
-      clearTimeout(timer);
       clearInterval(pingInterval);
     };
-  }, [playerName, send]);
+  }, [send]);
 
   // Weapon change propagation
   const handleWeaponChange = useCallback((w: WeaponType) => {
