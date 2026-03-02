@@ -1,5 +1,13 @@
 {
   "version": "7",
   "dialect": "mysql",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1772423966762,
+      "tag": "0000_small_marten_broadcloak",
+      "breakpoints": true
+    }
+  ]
 }

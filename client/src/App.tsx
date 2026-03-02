@@ -1,42 +1,66 @@
-import { Toaster } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
-import ErrorBoundary from "./components/ErrorBoundary";
-import { ThemeProvider } from "./contexts/ThemeContext";
-import Home from "./pages/Home";
+import { useState } from 'react';
+import { Toaster } from '@/components/ui/sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { ThemeProvider } from './contexts/ThemeContext';
+import ErrorBoundary from './components/ErrorBoundary';
+import MainMenu from './pages/MainMenu';
+import Game from './game/Game';
+import EndGame from './pages/EndGame';
+import { GameEndMsg } from '../../shared/game';
 
-function Router() {
-  // make sure to consider if you need authentication for certain routes
-  return (
-    <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
-      <Route component={NotFound} />
-    </Switch>
-  );
-}
+type AppScreen = 'menu' | 'game' | 'endgame';
 
-// NOTE: About Theme
-// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
-//   to keep consistent foreground/background color across components
-// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
+export default function App() {
+  const [screen, setScreen] = useState<AppScreen>('menu');
+  const [playerName, setPlayerName] = useState('');
+  const [myId, setMyId] = useState('');
+  const [endResult, setEndResult] = useState<GameEndMsg | null>(null);
 
-function App() {
+  const handlePlay = (name: string) => {
+    setPlayerName(name);
+    setScreen('game');
+  };
+
+  const handleGameEnd = (result: GameEndMsg) => {
+    setEndResult(result);
+    setScreen('endgame');
+  };
+
+  const handleRematch = () => {
+    setEndResult(null);
+    setScreen('game');
+  };
+
+  const handleMenu = () => {
+    setEndResult(null);
+    setScreen('menu');
+  };
+
   return (
     <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="light"
-        // switchable
-      >
+      <ThemeProvider defaultTheme="light">
         <TooltipProvider>
           <Toaster />
-          <Router />
+          {screen === 'menu' && (
+            <MainMenu onPlay={handlePlay} />
+          )}
+          {screen === 'game' && (
+            <Game
+              playerName={playerName}
+              onGameEnd={handleGameEnd}
+              onLeave={handleMenu}
+            />
+          )}
+          {screen === 'endgame' && endResult && (
+            <EndGame
+              result={endResult}
+              myId={myId}
+              onRematch={handleRematch}
+              onMenu={handleMenu}
+            />
+          )}
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
   );
 }
-
-export default App;

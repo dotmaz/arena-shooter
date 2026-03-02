@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
@@ -43,39 +44,45 @@
 }
 
 :root {
-  --primary: var(--color-blue-700);
-  --primary-foreground: var(--color-blue-50);
-  --sidebar-primary: var(--color-blue-600);
-  --sidebar-primary-foreground: var(--color-blue-50);
-  --chart-1: var(--color-blue-300);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-blue-600);
-  --chart-4: var(--color-blue-700);
-  --chart-5: var(--color-blue-800);
-  --radius: 0.65rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.235 0.015 65);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.235 0.015 65);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.235 0.015 65);
-  --secondary: oklch(0.98 0.001 286.375);
-  --secondary-foreground: oklch(0.4 0.015 65);
-  --muted: oklch(0.967 0.001 286.375);
-  --muted-foreground: oklch(0.552 0.016 285.938);
-  --accent: oklch(0.967 0.001 286.375);
-  --accent-foreground: oklch(0.141 0.005 285.823);
-  --destructive: oklch(0.577 0.245 27.325);
+  /* Sacred Geometry Palette */
+  --gold: #c8a84b;
+  --gold-light: #e8c96a;
+  --navy: #1a2340;
+  --cream: #f5f0e8;
+
+  --primary: oklch(0.18 0.04 240);
+  --primary-foreground: oklch(0.78 0.08 75);
+  --sidebar-primary: oklch(0.18 0.04 240);
+  --sidebar-primary-foreground: oklch(0.78 0.08 75);
+  --chart-1: oklch(0.78 0.08 75);
+  --chart-2: oklch(0.6 0.1 240);
+  --chart-3: oklch(0.5 0.12 240);
+  --chart-4: oklch(0.4 0.1 240);
+  --chart-5: oklch(0.3 0.08 240);
+  --radius: 0.625rem;
+  --background: oklch(0.97 0.01 80);
+  --foreground: oklch(0.18 0.04 240);
+  --card: oklch(0.99 0.005 80);
+  --card-foreground: oklch(0.18 0.04 240);
+  --popover: oklch(0.99 0.005 80);
+  --popover-foreground: oklch(0.18 0.04 240);
+  --secondary: oklch(0.94 0.02 80);
+  --secondary-foreground: oklch(0.18 0.04 240);
+  --muted: oklch(0.94 0.02 80);
+  --muted-foreground: oklch(0.5 0.02 240);
+  --accent: oklch(0.78 0.08 75);
+  --accent-foreground: oklch(0.18 0.04 240);
+  --destructive: oklch(0.55 0.2 25);
   --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.92 0.004 286.32);
-  --input: oklch(0.92 0.004 286.32);
-  --ring: oklch(0.623 0.214 259.815);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.235 0.015 65);
-  --sidebar-accent: oklch(0.967 0.001 286.375);
-  --sidebar-accent-foreground: oklch(0.141 0.005 285.823);
-  --sidebar-border: oklch(0.92 0.004 286.32);
-  --sidebar-ring: oklch(0.623 0.214 259.815);
+  --border: oklch(0.88 0.03 80);
+  --input: oklch(0.88 0.03 80);
+  --ring: oklch(0.78 0.08 75);
+  --sidebar: oklch(0.99 0.005 80);
+  --sidebar-foreground: oklch(0.18 0.04 240);
+  --sidebar-accent: oklch(0.94 0.02 80);
+  --sidebar-accent-foreground: oklch(0.18 0.04 240);
+  --sidebar-border: oklch(0.88 0.03 80);
+  --sidebar-ring: oklch(0.78 0.08 75);
 }
 
 .dark {
@@ -116,9 +123,15 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    box-sizing: border-box;
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', 'Space Grotesk', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  canvas {
+    display: block;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
@@ -175,3 +188,59 @@
     }
   }
 }
+/* ── Sacred Geometry Spinner ──────────────────────────────── */
+.sacred-spinner {
+  width: 64px;
+  height: 64px;
+  position: relative;
+}
+
+.sacred-spinner::before,
+.sacred-spinner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid transparent;
+}
+
+.sacred-spinner::before {
+  border-top-color: #c8a84b;
+  border-right-color: #c8a84b;
+  animation: sacred-spin 1.2s linear infinite;
+}
+
+.sacred-spinner::after {
+  border-bottom-color: rgba(200,168,75,0.3);
+  border-left-color: rgba(200,168,75,0.3);
+  animation: sacred-spin 1.2s linear infinite reverse;
+  inset: 8px;
+}
+
+@keyframes sacred-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Range input styling ──────────────────────────────────── */
+input[type='range'] {
+  -webkit-appearance: none;
+  height: 4px;
+  background: rgba(200,168,75,0.2);
+  border-radius: 2px;
+  outline: none;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #c8a84b;
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(200,168,75,0.4);
+}
+
+/* ── Custom scrollbar ─────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(200,168,75,0.25); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(200,168,75,0.5); }
